@@ -7,12 +7,12 @@ DEBIAN="${DEBIAN:-bookworm}"
 
 IMAGE="${DATE}-raspios-${DEBIAN}-arm64-lite.img"
 
-if [ $# -lt 1 ]; then
+if [[ $# -lt 1 ]]; then
     echo "Usage: $0 <directory>"
     exit 1
 fi
 
-if [ ! -d "$1" ]; then
+if ! [[ -d "$1" ]]; then
     echo "Error: directory $1 does not exist." 
     exit 1
 fi
@@ -25,14 +25,17 @@ files=($1/*)
 shopt -u nullglob
 shopt -u dotglob
 
-if [ ${#files[*]} -gt 0 ]; then
+if [[ ${#files[*]} -gt 0 ]]; then
     echo "Error: directory $1 is not empty."
     exit 1
 fi
 
-echo "Downloading ${IMAGE}.xz"
 
-curl -L -C - -O https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-${DATE}/${IMAGE}.xz
+if ! [[ -f ${IMAGE}.xz ]]
+then
+	echo "Downloading ${IMAGE}.xz"
+	curl -L -C - -O https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-${DATE}/${IMAGE}.xz
+fi
 
 echo "Extracting ${IMAGE}.xz"
 
